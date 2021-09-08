@@ -1,0 +1,6 @@
+{
+    "API_URL":"http://localhost:5000/",
+    "DB_USERNAME":"root",
+    "DB_PASSWORD":"123456",
+    "DB_NAME":"student_records"
+}

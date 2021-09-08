@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+    <head>
+        <title> Enter Credentials </title>
+        <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <form  onsubmit="event.preventDefault()" class="box">
+                            <h1>Login</h1>
+                            <p class="text-muted"> Please enter your login and password!</p>
+                             <input id='username' type="text" name="username" placeholder="Username"> 
+                             <input id='password' type="password" name="password" placeholder="Password"> 
+                             <a class="forgot text-muted" href="#">Forgot password?</a> 
+                             <input type="submit" name="" id="submit" value="Login" href="#">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+    <script>
+        let input=document.getElementById("submit");
+        
+        input.addEventListener("click",function(event){
+            const username = document.getElementById('username').value
+            const password = document.getElementById('password').value
+
+            const data = {
+                username:username,
+                password:password
+            }
+            let status;
+            fetch('/login',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify(data)
+            }).then(response=>{
+                status = response.status
+                return response.text();
+            }).then(data=>{
+                console.log(data)
+                if(status == 200){
+                    window.location = './dash.html'
+                }else{
+                    alert(data)
+                }
+            })
+        })
+        
+        
+    </script>
+    </html>
