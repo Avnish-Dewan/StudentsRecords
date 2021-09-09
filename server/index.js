@@ -111,7 +111,7 @@ app.post('/add/subject',(req,res)=>{
 app.post('/add/student', (req, res) => {
    console.log(req.body);
    // res.send('done');
-   const sql = `insert into student_data(fname ,midname,lname,age,dob, email, address) values('${req.body.fname}','${req.body.midname}','${req.body.lname}','${parseInt(req.body.age)}',STR_TO_DATE('${req.body.dob}','%d-%m-%Y'),'${req.body.email}','${req.body.add}')`
+   const sql = `insert into student_data(fname ,midname,lname,age,dob, email, address) values('${req.body.fname}','${req.body.midname}','${req.body.lname}','${parseInt(req.body.age)}',STR_TO_DATE('${req.body.dob}','%d-%m-%Y'),'${req.body.email}','${req.body.address}')`
    con.query(sql, (err, result) => {
       if (err) {
          console.log(err);
@@ -122,7 +122,32 @@ app.post('/add/student', (req, res) => {
    })
 })
 
+app.get('/list/student/:id',(req,res)=>{
+   // console.log(req.params.id)
+   const sql = `select * from student_data where rollNumber = ${req.params.id}`
+   con.query(sql,(err,result)=>{
+      if(err){
+         console.log(err);
+         res.send('Try Again after some time')
+      }else{
+         console.log(result[0])
+         res.send(result[0])
+      }
+   });
+})
 
+app.post(`/edit/student/:id`,(req,res)=>{
+   // console.log(req.body);
+   const sql = `UPDATE student_data SET fname='${req.body.fname}',midname='${req.body.midname || ''}',lname='${req.body.lname}',age=${req.body.age},dob=STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), email='${req.body.email}', address='${req.body.address}' where rollNumber=${req.params.id}`
+   con.query(sql,(err,result)=>{
+      if(err){
+         console.log(err);
+         res.send('Please Try Again After some time')
+      }else{
+         res.send('Updated')
+      }
+   })
+})
 
 app.listen(port, function () {   
     console.log(`Student app listening at ${port}`);

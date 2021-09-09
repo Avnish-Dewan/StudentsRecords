@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import config from '../config.json'
 import { Link } from 'react-router-dom'
-import { Container, ListGroup,Table } from 'react-bootstrap'
+import { Container, ListGroup,OverlayTrigger,Table,Tooltip } from 'react-bootstrap'
 
 class List extends React.Component {
 
@@ -27,6 +27,13 @@ class List extends React.Component {
         console.log('deleted');
     }
 
+    renderTooltip(props){
+        <Tooltip id="button-tooltip" {...props}>
+            Simple tooltip
+        </Tooltip>
+    }
+
+
     render() {
 
         if (this.state.data) {
@@ -47,6 +54,7 @@ class List extends React.Component {
                                 <th>Age</th>
                                 <th>Email</th>
                                 <th>Address</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,6 +69,35 @@ class List extends React.Component {
                                             <td> {student.age} </td>
                                             <td> {student.email} </td>
                                             <td> {student.address} </td>
+                                            <td style={{columnWidth:'160px',padding:'10px'}}>
+                                            {[{
+                                                className:'fas fa-user-edit',
+                                                text:'Edit Student',
+                                                link:`/edit/student/${student.rollNumber}`
+                                            }, {
+                                                className:'fas fa-edit',
+                                                text:'Update Attendance',
+                                                link:`/edit/attendance/${student.rollNumber}`
+                                            }, {
+                                                className:'fas fa-user-slash',
+                                                text:'Delete Student',
+                                                link: `/delete/student/${student.rollNumber}`
+                                                }].map(ele=>{
+                                                return (<OverlayTrigger
+                                                    placement="top"
+                                                    delay={{ show: 250, hide: 400 }}
+                                                    overlay={
+                                                        <Tooltip>
+                                                            {ele.text}
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <Link style={{ textDecoration: 'none',color:'#000' }} to={ele.link}>
+                                                        <i className={ele.className}>&nbsp;&nbsp;</i>
+                                                    </Link>
+                                                </OverlayTrigger>)
+                                            })}
+                                            </td>
                                         </tr>
                                     )
                             })}

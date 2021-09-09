@@ -49,6 +49,7 @@ class App extends React.Component{
 						<Route exact path="/" component={HomePage}/>
 						<Route path="/add/student" component={AddStudent} />
 						<Route path="/add/subject" component={AddSubject}/>
+						<Route path="/edit/student/:id" render={(props) => <AddStudent op='edit' {...props} />} />
 					</Switch>
 				</Router>
       			)
