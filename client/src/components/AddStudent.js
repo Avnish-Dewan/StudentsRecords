@@ -21,7 +21,8 @@ class AddStudent extends React.Component {
             dob: '',
             email: '',
             address: '',
-            age: ''
+            age: '',
+            label:'Add'
         }
         this.setFirstName = this.setFirstName.bind(this)
         this.setMidName = this.setMidName.bind(this)
@@ -44,7 +45,8 @@ class AddStudent extends React.Component {
                 dob: this.convertDate(response.data.dob) ||'',
                 email: response.data.email ||'',
                 address: response.data.address ||'',
-                age: response.data.age ||''
+                age: response.data.age ||'',
+                label:'Update'
             })
         })
 
@@ -129,7 +131,7 @@ class AddStudent extends React.Component {
         }).then(response => {
             console.log(response);
             alert(response.data)
-            window.location.reload()
+            window.location = '/'
         })
     }
     render() {
@@ -192,7 +194,7 @@ class AddStudent extends React.Component {
                         </Form.Group>
                     </Row>
                     <Button variant="danger" type="submit">
-                        Add Student
+                        {this.state.label} Student
                     </Button>
                 </Form>
             </Container>

@@ -100,8 +100,11 @@ app.post('/add/subject',(req,res)=>{
    const sql = `insert into subject_details(subcode,subname) values('${req.body.subcode}','${req.body.subname}')`
    con.query(sql, (err, result) => {
       if (err){
-         console.log(err);
-         res.send('Please try again after some time')
+         console.log(err.errno);
+         if(err.errno == 1062){
+            res.send('Duplicate Subcode exists');
+         }else
+            res.send('Please try again after some time')
       }
       else
          res.send('Successfully Added');
@@ -148,6 +151,60 @@ app.post(`/edit/student/:id`,(req,res)=>{
       }
    })
 })
+
+
+app.get('/list/subject/:id', (req, res) => {
+   // console.log(req.params.id)
+   const sql = `select * from subject_details where subcode = ${req.params.id}`
+   con.query(sql, (err, result) => {
+      if (err) {
+         console.log(err);
+         res.send('Try Again after some time')
+      } else {
+         console.log(result[0])
+         res.send(result[0])
+      }
+   });
+})
+
+app.post(`/edit/subject/:id`, (req, res) => {
+   // console.log(req.body);
+   const sql = `UPDATE subject_details SET subname='${req.body.subname}' where subcode=${req.params.id}`
+   con.query(sql, (err, result) => {
+      if (err) {
+         console.log(err);
+         res.send('Please Try Again After some time')
+      } else {
+         res.send('Updated')
+      }
+   })
+})
+
+app.post(`/delete/student/:id`,(req,res)=>{
+   const sql = `DELETE from student_data where rollNumber = ${req.params.id}`;
+   con.query(sql, (err, result) => {
+      if (err) {
+         console.log(err);
+         res.send('Please Try Again After some time')
+      } else {
+         res.send('Deleted')
+      }
+   })
+});
+
+
+app.post(`/delete/subject/:id`, (req, res) => {
+   const sql = `DELETE from subject_details where subcode = ${req.params.id}`;
+   con.query(sql, (err, result) => {
+      if (err) {
+         console.log(err);
+         res.send('Please Try Again After some time')
+      } else {
+         res.send('Deleted')
+      }
+   })
+});
+
 
 app.listen(port, function () {   
     console.log(`Student app listening at ${port}`);

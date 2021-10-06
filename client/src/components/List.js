@@ -14,7 +14,7 @@ class List extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`${config.API_URL}/list/${this.props.option}`)
+        axios.get(`${config.API_URL}/list/${this.props.option}`) // this.props.option === students
             .then(res => {
                 const data = res.data;
                 console.log('listdata,',data);
@@ -69,7 +69,7 @@ class List extends React.Component {
                                             <td> {student.age} </td>
                                             <td> {student.email} </td>
                                             <td> {student.address} </td>
-                                            <td style={{columnWidth:'160px',padding:'10px'}}>
+                                            <td style={{columnWidth:'250px'}}>
                                             {[{
                                                 className:'fas fa-user-edit',
                                                 text:'Edit Student',
@@ -106,11 +106,57 @@ class List extends React.Component {
                 )
             }else{
                 return (
-                    <Container>
-                        <ListGroup variant='flush'>
-                            {this.state.data.map(data => <ListGroup.Item key={data.subcode} > {data.subname}<span className="float-right"><Link style={{ textDecoration: 'none' }} to={`/edit/category/${data.subcode}`}><i className="fas fa-edit"></i></Link>  <span id={data.subcode} value={data.subname} onClick={this.deleteItem} className="fas fa-trash-alt"></span></span></ListGroup.Item>)}
-                        </ListGroup>
-                    </Container>
+                    // <Container>
+                    //     <ListGroup variant='flush'>
+                    //         {this.state.data.map(data => <ListGroup.Item key={data.subcode} > {data.subname}<span className="float-right"><Link style={{ textDecoration: 'none' }} to={`/edit/category/${data.subcode}`}><i className="fas fa-edit"></i></Link>  <span id={data.subcode} value={data.subname} onClick={this.deleteItem} className="fas fa-trash-alt"></span></span></ListGroup.Item>)}
+                    //     </ListGroup>
+                    // </Container>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Subject Code</th>
+                                <th>Subject Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.data.map((subject,index)=>{
+                                return (
+                                        <tr>
+                                            <td>{index+1}</td>
+                                            <td> {subject.subcode} </td>
+                                            <td> {subject.subname} </td>
+                                            <td style={{columnWidth:'50px'}}>
+                                            {[{
+                                                className:'fas fa-edit',
+                                                text:'Edit Subject',
+                                                link:`/edit/subject/${subject.subcode}`
+                                            }, {
+                                                className:'fas fa-trash-alt',
+                                                text:'Delete Subject',
+                                                link: `/delete/subject/${subject.subcode}`
+                                                }].map(ele=>{
+                                                return (<OverlayTrigger
+                                                    placement="top"
+                                                    delay={{ show: 250, hide: 400 }}
+                                                    overlay={
+                                                        <Tooltip>
+                                                            {ele.text}
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <Link style={{ textDecoration: 'none',color:'#000' }} to={ele.link}>
+                                                        <i className={ele.className}>&nbsp;&nbsp;</i>
+                                                    </Link>
+                                                </OverlayTrigger>)
+                                            })}
+                                            </td>
+                                        </tr>
+                                    )
+                            })}
+                        </tbody>
+                    </Table>
                 )
             }
         } else {
