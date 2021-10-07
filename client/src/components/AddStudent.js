@@ -4,6 +4,7 @@ import {
     Form, Row, Col, Button, Container
 } from 'react-bootstrap'
 import config from '../config.json'
+import Select from 'react-select';
 
 class AddStudent extends React.Component {
 
@@ -22,7 +23,14 @@ class AddStudent extends React.Component {
             email: '',
             address: '',
             age: '',
-            label:'Add'
+            label:'Add',
+            options:[
+                { value: 'chocolate', label: 'Chocolate' },
+                { value: 'strawberry', label: 'Strawberry' },
+                { value: 'vanilla', label: 'Vanilla' },
+            ],
+            selectedOption:[]
+            
         }
         this.setFirstName = this.setFirstName.bind(this)
         this.setMidName = this.setMidName.bind(this)
@@ -33,11 +41,12 @@ class AddStudent extends React.Component {
         this.setadd = this.setadd.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.getData = this.getData.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     getData(id){
         axios.get(`${config.API_URL}/list/student/${id}`).then(response=>{
-            // console.log(response.data);
+            console.log(response.data);
             this.setState({
                 fname: response.data.fname||'',
                 mname: response.data.midname ||'',
@@ -46,10 +55,28 @@ class AddStudent extends React.Component {
                 email: response.data.email ||'',
                 address: response.data.address ||'',
                 age: response.data.age ||'',
-                label:'Update'
+                label:'Update',
+                selectedOption:response.data.subjects || []
             })
         })
 
+    }
+
+    componentDidMount(){
+        axios.get(`${config.API_URL}/list/subjects`).then(response => {
+            // console.log(response.data);
+            console.log(response.data);
+            var options = response.data.map(data=>{
+                return {
+                    value:data.subcode,
+                    label: `${data.subname}`
+                }
+            })
+            console.log(options);
+            this.setState({
+                options:options
+            })
+        })
     }
 
     setFirstName(fname) {
@@ -123,7 +150,8 @@ class AddStudent extends React.Component {
             dob:this.state.dob,
             age:this.state.age+'',
             email:this.state.email,
-            address:this.state.address
+            address:this.state.address,
+            subjects:JSON.stringify(this.state.selectedOption),
         }
         axios.post(url, data, {
             'Content-Type': 'application\json',
@@ -134,7 +162,19 @@ class AddStudent extends React.Component {
             window.location = '/'
         })
     }
+
+    handleChange(selectedOption){
+        console.log(selectedOption)
+        this.setState({
+            selectedOption:selectedOption
+        })
+        // this.setState({ selectedOption }, () =>
+        //     console.log(`Option selected:`, this.state.selectedOption)
+        // );
+    }
+
     render() {
+        const selectedOption = this.state;
         return (
             <Container>
                 <Form onSubmit={this.handleSubmit}>
@@ -191,6 +231,15 @@ class AddStudent extends React.Component {
                                 onChange={(e) => this.setadd(e.target.value)} 
                                 value={this.state.address}
                                 />
+                        </Form.Group>
+                        <Form.Group as={Col} controlId="subject">
+                            <Form.Label> Subject </Form.Label>
+                            <Select
+                                value={this.state.selectedOption}
+                                isMulti={true}
+                                onChange={this.handleChange}
+                                options={this.state.options}
+                            />
                         </Form.Group>
                     </Row>
                     <Button variant="danger" type="submit">

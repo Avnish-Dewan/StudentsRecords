@@ -28,7 +28,7 @@ class HomePage extends React.Component {
     render() {
         if (this.state.data != null) {
             return (
-                <Container>
+                <Container fluid>
                     <Row>
                         <h1>Statistics for your site</h1>
                     </Row>

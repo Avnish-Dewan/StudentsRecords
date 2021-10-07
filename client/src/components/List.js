@@ -23,9 +23,6 @@ class List extends React.Component {
         
     }
 
-    deleteItem(event){
-        console.log('deleted');
-    }
 
     renderTooltip(props){
         <Tooltip id="button-tooltip" {...props}>
@@ -54,6 +51,7 @@ class List extends React.Component {
                                 <th>Age</th>
                                 <th>Email</th>
                                 <th>Address</th>
+                                <th>Subjects Allocated</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -69,6 +67,14 @@ class List extends React.Component {
                                             <td> {student.age} </td>
                                             <td> {student.email} </td>
                                             <td> {student.address} </td>
+                                            <td>
+                                                {
+                                                    (student.subjects == null) ? 'No Subjects Allocated' : 
+                                                    student.subjects.map(ele=>{
+                                                        return (<li key={ele.value}> {ele.label} </li>)
+                                                    })
+                                                }
+                                            </td>
                                             <td style={{columnWidth:'250px'}}>
                                             {[{
                                                 className:'fas fa-user-edit',
@@ -106,11 +112,6 @@ class List extends React.Component {
                 )
             }else{
                 return (
-                    // <Container>
-                    //     <ListGroup variant='flush'>
-                    //         {this.state.data.map(data => <ListGroup.Item key={data.subcode} > {data.subname}<span className="float-right"><Link style={{ textDecoration: 'none' }} to={`/edit/category/${data.subcode}`}><i className="fas fa-edit"></i></Link>  <span id={data.subcode} value={data.subname} onClick={this.deleteItem} className="fas fa-trash-alt"></span></span></ListGroup.Item>)}
-                    //     </ListGroup>
-                    // </Container>
                     <Table striped bordered hover>
                         <thead>
                             <tr>
