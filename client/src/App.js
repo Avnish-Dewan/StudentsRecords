@@ -13,6 +13,8 @@ import Header from './components/Header'
 import AddStudent from './components/AddStudent'
 import AddSubject from './components/AddSubject';
 import HomePage from './components/HomePage';
+import AddDues from './components/AddDues';
+import EditDues from './components/EditDues';
 class App extends React.Component{
 	constructor(props){
 		super(props);
@@ -59,24 +61,56 @@ class App extends React.Component{
 										'Content-Type': 'application\json',
 										'Access-Control-Allow-Origin': '*'
 									}).then(response => {
-										console.log(response);
 										alert(response.data)
 										window.location = '/';
 									})
 								}
 						} } />
-							<Route path="/delete/student/:id" render={(props) => {
+						<Route path="/delete/student/:id" render={(props) => {
 								if (window.confirm(`Are you sure you want to delete the student(Roll Number:${props.match.params.id})`)) {
 									axios.post(`${config.API_URL}/delete/student/${props.match.params.id}`, {}, {
 										'Content-Type': 'application\json',
 										'Access-Control-Allow-Origin': '*'
 									}).then(response => {
-										console.log(response);
 										alert(response.data)
 										window.location = '/';
 									})
 								}
 							}} />
+							<Route path="/edit/dues/:id" render={(props) => <EditDues {...props} />} />
+							<Route path="/add/dues/:id" render={(props) => <AddDues {...props} />} />
+							<Route path="/complete/due/:id" render={(props) => {
+								if (window.confirm(`Are you sure you want to mark the due as Completed?`)) {
+									axios.post(`${config.API_URL}/complete/due/${props.match.params.id}`, {}, {
+										'Content-Type': 'application\json',
+										'Access-Control-Allow-Origin': '*'
+									}).then(response => {
+										alert(response.data)
+										window.history.back();
+									})
+								}
+							}} />
+							<Route path="/incomplete/due/:id" render={(props) => {
+								if (window.confirm(`Are you sure you want to mark the due as incomplete?`)) {
+									axios.post(`${config.API_URL}/incomplete/due/${props.match.params.id}`, {}, {
+										'Content-Type': 'application\json',
+										'Access-Control-Allow-Origin': '*'
+									}).then(response => {
+										window.history.back();
+									})
+								}
+							}} />
+							<Route path="/delete/due/:id" render={(props) => {
+								if (window.confirm(`Are you sure you want to delete the due?`)) {
+									axios.post(`${config.API_URL}/delete/due/${props.match.params.id}`, {}, {
+										'Content-Type': 'application\json',
+										'Access-Control-Allow-Origin': '*'
+									}).then(response => {
+										window.history.back();
+									})
+								}
+							}} />
+							<Route path="/edit/due/:id" render={(props) => <AddDues op='edit' {...props} />} />
 					</Switch>
 				</Router>
       			)

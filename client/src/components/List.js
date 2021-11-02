@@ -82,8 +82,8 @@ class List extends React.Component {
                                                 link:`/edit/student/${student.rollNumber}`
                                             }, {
                                                 className:'fas fa-edit',
-                                                text:'Update Attendance',
-                                                link:`/edit/attendance/${student.rollNumber}`
+                                                text:'Edit Dues',
+                                                link:`/edit/dues/${student.rollNumber}`
                                             }, {
                                                 className:'fas fa-user-slash',
                                                 text:'Delete Student',
