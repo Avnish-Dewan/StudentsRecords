@@ -1,9 +1,8 @@
 import React from "react";
-import { Button, Row, Col, Container, ListGroup, OverlayTrigger, Tooltip, Table } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Button, Row, Col, Container, Table } from "react-bootstrap";
 import axios from 'axios'
 import config from '../config.json'
-import { ThemeConsumer } from "react-bootstrap/esm/ThemeProvider";
+
 
 
 class EditMarks extends React.Component {
@@ -16,19 +15,35 @@ class EditMarks extends React.Component {
             visible:false,
             label : 'Add Marks',
             subjects:[],
-            marks:0,
-            isDisabled : true
+            marks:null,
+            text:'Edit',
         }
+        this.buttons = []
+        this.inputs = []
+        this.getData(this.props.match.params.id);
+        this.getData = this.getData.bind(this);
         this.handleClick = this.handleClick.bind(this);
-        this.setMarks = this.setMarks.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.handleUpdateMarks = this.handleUpdateMarks.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.modifyArray = this.modifyArray.bind(this);
+        setTimeout(()=>{
+            this.modifyArray();
+        },100)
+        this.handleDeleteMarks = this.handleDeleteMarks.bind(this);
+    }
+
+    getData(rollNumber){
+        axios.get(`${config.API_URL}/list/marks/${rollNumber}`).then(response => {
+            this.setState({
+                addedMarks : response.data
+            })
+        })
+        
     }
 
     componentDidMount() {
         axios.get(`${config.API_URL}/list/student/${this.props.match.params.id}`).then(response => {
-            console.log(response.data)
             this.setState({
                 name: response.data.fname + ' ' + (response.data.midname ? ' ' : '') + response.data.lname,
                 rollNumber:response.data.rollNumber,
@@ -40,15 +55,10 @@ class EditMarks extends React.Component {
     handleClick(event){
         let visible = this.state.visible
         let label = this.state.label;
-        if(!visible){
-            label = 'Save Marks';
-        }else{
-            label = 'Add Marks'
-        }
 
         if(visible){
             axios.post(`${config.API_URL}/add/marks`,this.state).then(response=>{
-                console.log(response.data);
+                window.location.reload()
             });
         }
         event.preventDefault();
@@ -58,30 +68,93 @@ class EditMarks extends React.Component {
         })
     }
 
-    handleChange(value){
+    handleChange(value,index,subcode){
+        this.inputs[index].value = value;
+        var addedMarks = this.state.addedMarks;
+        for(var i = 0;i<addedMarks.length;i++){
+            if(addedMarks[i].subcode == subcode){
+                addedMarks[i].marks = value;
+            }
+        }
         this.setState({
-            marks : value
-        });
+            addedMarks : addedMarks
+        })
     }
 
     handleSelectChange(event){
-        console.log(event.target.value);
         this.setState({
             subcode:event.target.value
         })
     }
 
-    setMarks(value){
+    
+    handleUpdateMarks(index,subcode){
+        const data = this.inputs[index].disabled;
+        this.inputs[index].disabled = !data;
+        let text = this.buttons[index].textContent
+        if(text === 'Edit'){
+            this.buttons[index].textContent = 'Update';
+        }else if(text === 'Update'){
+            this.buttons[index].textContent = 'Edit'
+            // TODO : Send request to server 
+
+            // var subcode = this.addedMarks[index].subcode
+            var marks = this.inputs[index].value
+            const data = {
+                rollNumber:this.props.match.params.id,
+                subcode : subcode,
+                marks:parseInt(marks)
+            }
+            console.log(data);
+            axios.post(`${config.API_URL}/edit/marks`,data, {
+                'Content-Type': 'application\json',
+                'Access-Control-Allow-Origin': '*'
+            }).then(response => {
+                console.log(response);
+                alert(response.data)
+            })
+        }
+    }
+
+    modifyArray(){
+        let addedArray = this.state.addedMarks;
+        let totalArray = this.state.subjects;
+
+
+        var elmts = totalArray.filter(f => {
+            for(var i of addedArray){
+                if(i.subcode == f.value){
+                    return false;
+                }
+            }
+            return true;
+        });
         this.setState({
-            marks:value
+            subjects : elmts
         })
     }
-    
-    handleUpdateMarks(){
-        this.setState({
-            isDisabled : !this.state.isDisabled,
-            label:"Save Marks"
+
+    handleDeleteMarks(subcode){
+        let addedMarks = this.state.addedMarks;
+        
+        addedMarks = addedMarks.filter(ele=>{
+            return (ele.subcode != subcode);
         })
+
+        const data = {
+            rollNumber : this.props.match.params.id,
+            subcode : subcode
+        }
+
+        axios.post(`${config.API_URL}/delete/marks`, data, {
+            'Content-Type': 'application\json',
+            'Access-Control-Allow-Origin': '*'
+        }).then(response => {
+            alert(response.data)
+            window.location.reload();
+        })
+
+
     }
 
     render() {
@@ -97,21 +170,23 @@ class EditMarks extends React.Component {
                     </thead>
                     <tbody>
                         {
-                            [1,2,3,4,5].map(ele=>{
+                            this.state.addedMarks && this.state.addedMarks.length > 0 ? ( this.state.addedMarks.map((ele,index)=>{
                                 return (
                                     <tr>
-                                        <td>{ele}</td>
-                                        <td>Mark</td>
+                                        <td>{index+1}</td>
+                                        <td>{ele.subcode}</td>
                                         <td>
-                                            <div>
-                                                <input type="number" max={100} disabled={this.state.isDisabled} value={this.state.marks} onChange={(e) => this.handleChange(e.target.value)} /> &nbsp;&nbsp;
-                                                <Button variant="success" onClick={this.handleUpdateMarks}>Update</Button>&nbsp;&nbsp;
-                                                <Button variant="danger">Delete</Button>
+                                            <div key={ele.subcode}>
+                                                <input type="number" max={100} ref={ref => this.inputs[index] = ref} disabled={true} value={ele.marks} onChange={(e) => this.handleChange(e.target.value,index,ele.subcode)} /> &nbsp;&nbsp;
                                             </div>
+                                        </td>
+                                        <td>
+                                            <Button variant="success" ref={ref => this.buttons[index] = ref} onClick={() => this.handleUpdateMarks(index,ele.subcode)}>{this.state.text}</Button>&nbsp;&nbsp;
+                                            <Button variant="danger" onClick={()=>this.handleDeleteMarks(ele.subcode)}>Delete</Button>
                                         </td>
                                     </tr>
                                 )
-                            })
+                            }) ) : (<tr> <td style={{textAlign:'center'}} colspan="3"> No Data to show </td> </tr>)
                         }
                     </tbody>
                 </Table>
@@ -120,21 +195,24 @@ class EditMarks extends React.Component {
                         <Row>
                             <Col>
                                 <select onChange={this.handleSelectChange}>
-                                    <option selected disabled>Select Subject Code</option>
+                                    <option selected disabled>Select Subject</option>
                                     {
-                                        this.state.subjects.map(ele=>{
+                                        this.state.subjects.map(ele => {
                                             return (<option value={ele.value}> {ele.label} </option>)
                                         })
                                     }
                                 </select>
                             </Col>
                             <Col>
-                                <input type='number' onChange={(e) => this.setMarks(e.target.value)}
+                                <input type='number' placeholder="Enter marks"
                                     value={this.state.marks}
+                                    onChange={(e)=>this.setState({
+                                        marks:e.target.value
+                                    })}
                                 />
                             </Col>
                         </Row>
-                        ): null
+                    ) : null
                 }
                 <Button onClick={this.handleClick} variant="primary">{this.state.label}</Button>
             </Container>

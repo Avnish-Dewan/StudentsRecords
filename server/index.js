@@ -282,6 +282,49 @@ app.post(`/add/marks`,(req,res)=>{
    })
 })
 
+app.get('/list/marks/:id',(req,res)=>{
+   const sql = `select * from marks where stud_id = ${req.params.id};`;
+   con.query(sql, (err, result) => {
+      if (err) {
+         throw err;
+         res.send('Try Again after some time')
+      } else {
+         res.send(result)
+      }
+   })
+})
+
+app.post('/edit/marks',(req,res)=>{
+   console.log(req.body);
+
+   const sql = `update marks set marks=${req.body.marks} where stud_id=${req.body.rollNumber} and subcode='${req.body.subcode}';`
+
+   con.query(sql, (err, result) => {
+      if (err) {
+         throw err;
+         res.send('Try Again after some time')
+      } else {
+         res.send('Marks Updated');
+      }
+   });
+})
+
+app.post('/delete/marks', (req, res) => {
+   console.log(req.body);
+
+   const sql = `delete from marks where stud_id=${req.body.rollNumber} and subcode='${req.body.subcode}';`
+
+   con.query(sql, (err, result) => {
+      if (err) {
+         throw err;
+         res.send('Try Again after some time')
+      } else {
+         res.send('Marks Deleted');
+      }
+   });
+})
+
 app.listen(port, function () {   
     console.log(`Student app listening at ${port}`);
  })
+ 
