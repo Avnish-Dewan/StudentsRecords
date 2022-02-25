@@ -79,7 +79,7 @@ class AddSubject extends React.Component {
                             <Form.Label>Enter Subject Code</Form.Label>
                                 <Form.Control 
                                 required 
-                                type="number" 
+                                type="text" 
                                 placeholder="Enter Subject Code" 
                                 onChange={(e) => this.setcode(e.target.value)}
                                 value={this.state.subcode}

@@ -41,17 +41,14 @@ class EditDues extends React.Component {
                                                     className: 'far fa-edit',
                                                     text: 'Edit Due',
                                                     link: `/edit/due/${due.due_id}`,
-                                                    isHidden:false
                                                 }, {
                                                     className: 'fas fa-trash',
                                                     text: 'Delete Due',
                                                     link: `/delete/due/${due.due_id}`,
-                                                    isHidden: false
                                                 }, {
                                                     className: due.is_completed ? 'fas fa-times-circle' :'fas fa-check-circle',
                                                     text: due.is_completed ? 'Mark as Incomplete' : 'Mark as Complete',
                                                     link: due.is_completed ? `/incomplete/due/${due.due_id}` :`/complete/due/${due.due_id}`,
-                                                    isHidden: due.is_completed ? true : false
                                                 }].map(ele => {
                                                     return (<OverlayTrigger
                                                         placement="top"

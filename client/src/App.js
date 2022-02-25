@@ -15,6 +15,7 @@ import AddSubject from './components/AddSubject';
 import HomePage from './components/HomePage';
 import AddDues from './components/AddDues';
 import EditDues from './components/EditDues';
+import EditMarks from './components/EditMarks'
 class App extends React.Component{
 	constructor(props){
 		super(props);
@@ -64,6 +65,8 @@ class App extends React.Component{
 										alert(response.data)
 										window.location = '/';
 									})
+								} else {
+									window.history.back();
 								}
 						} } />
 						<Route path="/delete/student/:id" render={(props) => {
@@ -75,6 +78,8 @@ class App extends React.Component{
 										alert(response.data)
 										window.location = '/';
 									})
+								} else {
+									window.history.back();
 								}
 							}} />
 							<Route path="/edit/dues/:id" render={(props) => <EditDues {...props} />} />
@@ -88,6 +93,8 @@ class App extends React.Component{
 										alert(response.data)
 										window.history.back();
 									})
+								}else{
+									window.history.back();
 								}
 							}} />
 							<Route path="/incomplete/due/:id" render={(props) => {
@@ -98,6 +105,8 @@ class App extends React.Component{
 									}).then(response => {
 										window.history.back();
 									})
+								} else {
+									window.history.back();
 								}
 							}} />
 							<Route path="/delete/due/:id" render={(props) => {
@@ -108,9 +117,12 @@ class App extends React.Component{
 									}).then(response => {
 										window.history.back();
 									})
+								} else {
+									window.history.back();
 								}
 							}} />
 							<Route path="/edit/due/:id" render={(props) => <AddDues op='edit' {...props} />} />
+							<Route path="/edit/marks/:id" render={(props) => <EditMarks {...props} />}  />
 					</Switch>
 				</Router>
       			)

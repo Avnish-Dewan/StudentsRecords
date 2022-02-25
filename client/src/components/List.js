@@ -88,6 +88,10 @@ class List extends React.Component {
                                                 className:'fas fa-user-slash',
                                                 text:'Delete Student',
                                                 link: `/delete/student/${student.rollNumber}`
+                                                },{
+                                                    className: 'fas fa-plus-square',
+                                                    text: 'Add/Edit Marks',
+                                                    link: `/edit/marks/${student.rollNumber}`,
                                                 }].map(ele=>{
                                                 return (<OverlayTrigger
                                                     placement="top"

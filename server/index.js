@@ -268,6 +268,20 @@ app.post(`/update/dues/:id`, (req, res) => {
    })
 })
 
+
+app.post(`/add/marks`,(req,res)=>{
+   console.log(req.body.rollNumber);
+
+   const sql = `INSERT into marks(stud_id,subcode,marks) values(${req.body.rollNumber},'${req.body.subcode}',${req.body.marks})`;
+   con.query(sql, (err, result) => {
+      if (err) {
+         res.send('Please Try Again After some time')
+      } else {
+         res.send('Inserted')
+      }
+   })
+})
+
 app.listen(port, function () {   
     console.log(`Student app listening at ${port}`);
  })
