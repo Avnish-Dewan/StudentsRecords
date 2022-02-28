@@ -31,13 +31,15 @@ var con = mysql.createConnection({
     const username= req.body.username;
     const password=req.body.password;
 
-    const sqlquery=`SELECT password FROM login where username='${username}'`;
+    const sqlquery=`SELECT password,role FROM login where username='${username}'`;
     con.query(sqlquery, function (err, result) {
        if (err) 
           throw err;
           if(result.length){
               if(result[0].password==password){
+                 console.log(result[0].role);
                   res.send({
+                     role:result[0].role,
                      statusCode:200
                   })
               }
@@ -106,10 +108,22 @@ app.post('/add/student', (req, res) => {
    const sql = `insert into student_data(fname ,midname,lname,age,dob, email, address,subjects) values('${req.body.fname}','${req.body.midname}','${req.body.lname}','${parseInt(req.body.age)}',STR_TO_DATE('${req.body.dob}','%d-%m-%Y'),'${req.body.email}','${req.body.address}','${req.body.subjects}')`
    con.query(sql, (err, result) => {
       if (err) {
-         res.send('Please try again after some time')
+         res.send('Duplicate Entry for email');
       }
-      else
-         res.send('Successfully Added');
+      else{
+         let dob = req.body.dob;
+         dob = dob.replaceAll('-', '')
+         const query = `insert into login values('${req.body.email}','${dob}','user')`;
+         con.query(query,(err,result) => {
+            if(err){
+               console.log(err);
+               res.send('Duplicate Entry for email : login');
+            }else{
+               res.send('Successfully Added')
+            }
+         });
+
+      }
    })
 })
 
@@ -162,6 +176,7 @@ app.post(`/delete/student/:id`,(req,res)=>{
    const sql = `DELETE from student_data where rollNumber = ${req.params.id}`;
    con.query(sql, (err, result) => {
       if (err) {
+         console.log(err);
          res.send('Please Try Again After some time')
       } else {
          res.send('Deleted')
@@ -174,9 +189,9 @@ app.post(`/delete/subject/:id`, (req, res) => {
    const sql = `DELETE from subject_details where subcode = ${req.params.id}`;
    con.query(sql, (err, result) => {
       if (err) {
-         res.send('Please Try Again After some time')
+         res.send('Please Try Again After some time');
       } else {
-         res.send('Deleted')
+         res.send('Deleted');
       }
    })
 });

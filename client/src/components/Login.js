@@ -52,7 +52,8 @@ export default class Login extends React.Component{
         }).then(response=>{
             if(response){
                 if (response.data.statusCode == 200){
-                    this.props.setLoggedIn(true);
+                    console.log(response.data);
+                    this.props.setLoggedIn(true,response.data.role);
                 }else{
                     alert(response.data.data);
                 }

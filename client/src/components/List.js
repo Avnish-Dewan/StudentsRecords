@@ -69,7 +69,7 @@ class List extends React.Component {
                                             <td> {student.address} </td>
                                             <td>
                                                 {
-                                                    (student.subjects == null) ? 'No Subjects Allocated' : 
+                                                    (!student.subjects.length) ? 'No Subjects Allocated' : 
                                                     student.subjects.map(ele=>{
                                                         return (<li key={ele.value}> {ele.label} </li>)
                                                     })
