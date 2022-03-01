@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios'
-import config from '../config.json'
+import config from '../../config.json'
 import {
     Form, 
     Row,

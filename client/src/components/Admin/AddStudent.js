@@ -3,7 +3,7 @@ import React from 'react';
 import {
     Form, Row, Col, Button, Container
 } from 'react-bootstrap'
-import config from '../config.json'
+import config from '../../config.json'
 import Select from 'react-select';
 
 class AddStudent extends React.Component {

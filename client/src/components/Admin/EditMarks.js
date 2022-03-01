@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Row, Col, Container, Table } from "react-bootstrap";
 import axios from 'axios'
-import config from '../config.json'
+import config from '../../config.json'
 
 
 

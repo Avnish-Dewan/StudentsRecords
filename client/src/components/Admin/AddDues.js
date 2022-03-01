@@ -3,7 +3,7 @@ import {
     Form, Row, Col, Button, Container
 } from 'react-bootstrap'
 import axios from "axios";
-import config from '../config.json'
+import config from '../../config.json'
 
 class AddDues extends React.Component {
     constructor(props) {

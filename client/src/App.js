@@ -10,12 +10,12 @@ import config from './config.json'
 import React from 'react';
 import Login from './components/Login'
 import Header from './components/Header'
-import AddStudent from './components/AddStudent'
-import AddSubject from './components/AddSubject';
+import AddStudent from './components/Admin/AddStudent'
+import AddSubject from './components/Admin/AddSubject';
 import HomePage from './components/HomePage';
-import AddDues from './components/AddDues';
-import EditDues from './components/EditDues';
-import EditMarks from './components/EditMarks'
+import AddDues from './components/Admin/AddDues';
+import EditDues from './components/Admin/EditDues';
+import EditMarks from './components/Admin/EditMarks';
 class App extends React.Component{
 	constructor(props){
 		super(props);
@@ -50,14 +50,11 @@ class App extends React.Component{
         		<Login setLoggedIn = {this.setLoggedIn}/>
       		)
     	}else{
-			if(this.state.role == 'user'){
-				return <h1> User Side </h1>
-			}else{
 				return (
 					<Router>
-						<Header />
+						<Header handleLogout = {this.setLoggedIn} role={this.state.role}/>
 						<Switch>
-							<Route exact path="/" component={HomePage}/>
+							<Route exact path="/" render={(props) => <HomePage role={this.state.role} {...props}/> } />
 							<Route path="/add/student" component={AddStudent} />
 							<Route path="/add/subject" component={AddSubject}/>
 							<Route path="/edit/student/:id" render={(props) => <AddStudent op='edit' {...props} />} />
@@ -132,7 +129,6 @@ class App extends React.Component{
 						</Switch>
 					</Router>
 					)
-			}
     	}
   	}
 }

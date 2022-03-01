@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Col, Container, ListGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from 'axios'
-import config from '../config.json'
+import config from '../../config.json'
 
 
 class EditDues extends React.Component {
