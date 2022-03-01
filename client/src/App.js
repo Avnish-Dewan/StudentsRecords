@@ -16,6 +16,10 @@ import HomePage from './components/HomePage';
 import AddDues from './components/Admin/AddDues';
 import EditDues from './components/Admin/EditDues';
 import EditMarks from './components/Admin/EditMarks';
+import SubjectsList from './components/User/SubjectsList';
+import MarksList from './components/User/MarksList'
+import DuesList from './components/User/DuesList';
+import Payment from './components/User/Payment';
 class App extends React.Component{
 	constructor(props){
 		super(props);
@@ -27,19 +31,22 @@ class App extends React.Component{
 	}
 
 
-	setLoggedIn(isLoggedIn,role){
+	setLoggedIn(isLoggedIn,role,username){
 		sessionStorage.setItem('isLoggedIn', isLoggedIn)
 		sessionStorage.setItem('role',role);
+		sessionStorage.setItem('username',username);
 		this.setState({
 			isLoggedIn: JSON.parse(sessionStorage.getItem('isLoggedIn')),
-			role: sessionStorage.getItem('role')
+			role: sessionStorage.getItem('role'),
+			email:username
 		});
 	}
 
   	componentDidMount(){
 		this.setState({
 			isLoggedIn: JSON.parse(sessionStorage.getItem('isLoggedIn')),
-			role: sessionStorage.getItem('role')
+			role: sessionStorage.getItem('role'),
+			email : sessionStorage.getItem('username')
 		});
 	}
 
@@ -54,7 +61,7 @@ class App extends React.Component{
 					<Router>
 						<Header handleLogout = {this.setLoggedIn} role={this.state.role}/>
 						<Switch>
-							<Route exact path="/" render={(props) => <HomePage role={this.state.role} {...props}/> } />
+							<Route exact path="/" render={(props) => <HomePage role={this.state.role} email={this.state.email} {...props}/> } />
 							<Route path="/add/student" component={AddStudent} />
 							<Route path="/add/subject" component={AddSubject}/>
 							<Route path="/edit/student/:id" render={(props) => <AddStudent op='edit' {...props} />} />
@@ -126,6 +133,10 @@ class App extends React.Component{
 								}} />
 								<Route path="/edit/due/:id" render={(props) => <AddDues op='edit' {...props} />} />
 								<Route path="/edit/marks/:id" render={(props) => <EditMarks {...props} />}  />
+								<Route path="/view/subjects" render={(props) => <SubjectsList email={this.state.email} {...props} /> } />
+								<Route path="/view/marks" render={(props) => <MarksList email={this.state.email} {...props} />} /> 
+								<Route path="/view/dues" render={(props) => <DuesList email={this.state.email} {...props} />} />
+								<Route path="/payment" component={Payment} />
 						</Switch>
 					</Router>
 					)

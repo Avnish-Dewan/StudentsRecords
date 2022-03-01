@@ -46,7 +46,6 @@ class AddStudent extends React.Component {
 
     getData(id){
         axios.get(`${config.API_URL}/list/student/${id}`).then(response=>{
-            console.log(response.data);
             this.setState({
                 fname: response.data.fname||'',
                 mname: response.data.midname ||'',
@@ -64,15 +63,12 @@ class AddStudent extends React.Component {
 
     componentDidMount(){
         axios.get(`${config.API_URL}/list/subjects`).then(response => {
-            // console.log(response.data);
-            console.log(response.data);
             var options = response.data.map(data=>{
                 return {
                     value:data.subcode,
                     label: `${data.subname}`
                 }
             })
-            console.log(options);
             this.setState({
                 options:options
             })
@@ -141,7 +137,7 @@ class AddStudent extends React.Component {
         let url = `${config.API_URL}/add/student`
         if(this.props.op === 'edit')
             url = `${config.API_URL}/edit/student/${this.props.match.params.id}`
-        console.log(url);
+    
         event.preventDefault()
         const data = {
             fname:this.state.fname,
@@ -157,20 +153,15 @@ class AddStudent extends React.Component {
             'Content-Type': 'application\json',
             'Access-Control-Allow-Origin': '*'
         }).then(response => {
-            console.log(response);
             alert(response.data)
             window.location = '/'
         })
     }
 
     handleChange(selectedOption){
-        console.log(selectedOption)
         this.setState({
             selectedOption:selectedOption
         })
-        // this.setState({ selectedOption }, () =>
-        //     console.log(`Option selected:`, this.state.selectedOption)
-        // );
     }
 
     render() {

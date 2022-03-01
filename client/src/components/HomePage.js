@@ -19,7 +19,6 @@ class HomePage extends React.Component {
         axios.get(`${config.API_URL}/count`)
             .then(res => {
                 const data = res.data;
-                console.log('data=',data);
                 this.setState({
                     data: data
                 })
@@ -74,7 +73,7 @@ class HomePage extends React.Component {
                 return <h1>Loading</h1>
             }
         }else{
-            return (<Profile />)
+            return (<Profile email={this.props.email}/>)
         }
     }
 }

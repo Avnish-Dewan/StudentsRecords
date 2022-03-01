@@ -69,7 +69,6 @@ class AddDues extends React.Component {
             'Content-Type': 'application\json',
             'Access-Control-Allow-Origin': '*'
         }).then(response => {
-            console.log(response);
             alert(response.data)
             window.history.back();
         });

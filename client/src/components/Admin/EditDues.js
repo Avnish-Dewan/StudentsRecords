@@ -18,7 +18,6 @@ class EditDues extends React.Component {
         axios.get(`${config.API_URL}/list/dues/${this.props.match.params.id}`) // this.props.option === students
             .then(res => {
                 const data = res.data;
-                console.log('Dues Data ->', data);
                 this.setState({ data: data })
             })
     }

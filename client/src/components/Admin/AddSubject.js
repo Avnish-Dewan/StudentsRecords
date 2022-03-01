@@ -31,7 +31,6 @@ class AddSubject extends React.Component {
 
     getData(id) {
         axios.get(`${config.API_URL}/list/subject/${id}`).then(response => {
-            // console.log(response.data);
             this.setState({
                 subcode : response.data.subcode,
                 subname: response.data.subname,
@@ -65,7 +64,6 @@ class AddSubject extends React.Component {
             'Content-Type': 'application\json',
             'Access-Control-Allow-Origin': '*'
         }).then(response => {
-            console.log(response);
             alert(response.data)
             window.location.reload();
         })

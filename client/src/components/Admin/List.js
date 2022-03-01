@@ -17,7 +17,6 @@ class List extends React.Component {
         axios.get(`${config.API_URL}/list/${this.props.option}`) // this.props.option === students
             .then(res => {
                 const data = res.data;
-                console.log('listdata,',data);
                 this.setState({ data: data })
             })
         
@@ -37,7 +36,6 @@ class List extends React.Component {
             if(this.state.data.length == 0){
                 return <div className = 'text-center'> No Data to Show </div>
             }
-            // console.log(this.props.option)
             if(this.props.option === 'students'){
                 return (
                     <Table striped bordered hover>

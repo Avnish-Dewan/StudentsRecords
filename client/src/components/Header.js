@@ -15,7 +15,7 @@ class Header extends React.Component {
 
     handleClick(event){
         if (window.confirm(`Are you sure you want to logout?`)) {
-            this.props.handleLogout(false, null);
+            this.props.handleLogout(false, null,null);
         }
     }
 

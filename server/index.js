@@ -1,4 +1,5 @@
 const config = require('../config.json')
+const stripe = require('stripe')(`${config.stripe_secret_key}`)
 
 var express = require('express');
 var mysql = require('mysql2');
@@ -37,7 +38,6 @@ var con = mysql.createConnection({
           throw err;
           if(result.length){
               if(result[0].password==password){
-                 console.log(result[0].role);
                   res.send({
                      role:result[0].role,
                      statusCode:200
@@ -272,7 +272,6 @@ app.get('/list/due/:id', (req, res) => {
 });
 
 app.post(`/update/dues/:id`, (req, res) => {
-   console.log(req.body);
    const sql = `UPDATE dues SET due_payment=${req.body.amount},due_desc='${req.body.reason}' where due_id='${req.params.id}'`
    con.query(sql, (err, result) => {
       if (err) {
@@ -285,7 +284,6 @@ app.post(`/update/dues/:id`, (req, res) => {
 
 
 app.post(`/add/marks`,(req,res)=>{
-   console.log(req.body.rollNumber);
 
    const sql = `INSERT into marks(stud_id,subcode,marks) values(${req.body.rollNumber},'${req.body.subcode}',${req.body.marks})`;
    con.query(sql, (err, result) => {
@@ -310,7 +308,6 @@ app.get('/list/marks/:id',(req,res)=>{
 })
 
 app.post('/edit/marks',(req,res)=>{
-   console.log(req.body);
 
    const sql = `update marks set marks=${req.body.marks} where stud_id=${req.body.rollNumber} and subcode='${req.body.subcode}';`
 
@@ -325,7 +322,6 @@ app.post('/edit/marks',(req,res)=>{
 })
 
 app.post('/delete/marks', (req, res) => {
-   console.log(req.body);
 
    const sql = `delete from marks where stud_id=${req.body.rollNumber} and subcode='${req.body.subcode}';`
 
@@ -338,6 +334,43 @@ app.post('/delete/marks', (req, res) => {
       }
    });
 })
+
+app.get('/view/student/:email',(req,res)=>{
+   console.log(req.params.email);
+   const sql = `select * from student_data where email='${req.params.email}'`;
+
+   con.query(sql, (err, result) => {
+      if (err) {
+         throw err;
+         res.send('Try Again after some time')
+      } else {
+         res.send(result[0]);
+      }
+   });
+});
+
+app.post('/create-checkout-session', async (req, res) => {
+   console.log(`received request`);
+   const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [{
+         price_data: {
+            currency: "inr",
+            product_data: {
+               name: "product",
+            },
+            unit_amount: 100000,
+         },
+         quantity: 1,
+      },],
+      mode: "payment",
+      success_url: "https://www.google.com",
+      cancel_url: req.body.cancel,
+   });
+
+   res.send(session.url);
+});
+
 
 app.listen(port, function () {   
     console.log(`Student app listening at ${port}`);

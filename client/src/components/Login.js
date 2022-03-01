@@ -38,8 +38,6 @@ export default class Login extends React.Component{
 
     handleSubmit(event) {
         event.preventDefault();
-        console.log('Submitted');
-        console.log(config)
 
         const data = {
             username:this.state.email,
@@ -52,8 +50,7 @@ export default class Login extends React.Component{
         }).then(response=>{
             if(response){
                 if (response.data.statusCode == 200){
-                    console.log(response.data);
-                    this.props.setLoggedIn(true,response.data.role);
+                    this.props.setLoggedIn(true,response.data.role,this.state.email);
                 }else{
                     alert(response.data.data);
                 }

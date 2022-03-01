@@ -96,21 +96,16 @@ class EditMarks extends React.Component {
             this.buttons[index].textContent = 'Update';
         }else if(text === 'Update'){
             this.buttons[index].textContent = 'Edit'
-            // TODO : Send request to server 
-
-            // var subcode = this.addedMarks[index].subcode
             var marks = this.inputs[index].value
             const data = {
                 rollNumber:this.props.match.params.id,
                 subcode : subcode,
                 marks:parseInt(marks)
             }
-            console.log(data);
             axios.post(`${config.API_URL}/edit/marks`,data, {
                 'Content-Type': 'application\json',
                 'Access-Control-Allow-Origin': '*'
             }).then(response => {
-                console.log(response);
                 alert(response.data)
             })
         }
