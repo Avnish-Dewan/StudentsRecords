@@ -3,5 +3,7 @@
     "DB_USERNAME":"root",
     "DB_PASSWORD":"123456",
     "DB_NAME":"student_records",
-    "stripe_secret_key":"sk_test_51HNG88DpcbWR7u7oM7rYPd0bpoUKfv4lwsIqLKQfBqHUjqVyBY93wPGyRR4rtN8IGo6JbkWRDGcYx8YG2QKtHvy300diS0u9S6"
+    "stripe_secret_key":"sk_test_51HNG88DpcbWR7u7oM7rYPd0bpoUKfv4lwsIqLKQfBqHUjqVyBY93wPGyRR4rtN8IGo6JbkWRDGcYx8YG2QKtHvy300diS0u9S6",
+    "aws_access_key":"AKIAXKB5WGU6MHNIBZOQ",
+    "aws_secret_key":"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"
 }

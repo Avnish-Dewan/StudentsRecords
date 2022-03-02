@@ -105,9 +105,10 @@ app.post('/add/subject',(req,res)=>{
 })
 
 app.post('/add/student', (req, res) => {
-   const sql = `insert into student_data(fname ,midname,lname,age,dob, email, address,subjects) values('${req.body.fname}','${req.body.midname}','${req.body.lname}','${parseInt(req.body.age)}',STR_TO_DATE('${req.body.dob}','%d-%m-%Y'),'${req.body.email}','${req.body.address}','${req.body.subjects}')`
+   const sql = `insert into student_data(fname ,midname,lname,age,dob, email, address,subjects,image) values('${req.body.fname}','${req.body.midname}','${req.body.lname}','${parseInt(req.body.age)}',STR_TO_DATE('${req.body.dob}','%Y-%m-%d'),'${req.body.email}','${req.body.address}','${req.body.subjects}','${req.body.image_url}')`
    con.query(sql, (err, result) => {
       if (err) {
+         console.log(err);
          res.send('Duplicate Entry for email');
       }
       else{
@@ -139,7 +140,7 @@ app.get('/list/student/:id',(req,res)=>{
 })
 
 app.post(`/edit/student/:id`,(req,res)=>{
-   const sql = `UPDATE student_data SET fname='${req.body.fname}',midname='${req.body.midname || ''}',lname='${req.body.lname}',age=${req.body.age},dob=STR_TO_DATE('${req.body.dob}','%d-%m-%Y'), email='${req.body.email}', address='${req.body.address}',subjects='${req.body.subjects}' where rollNumber=${req.params.id}`
+   const sql = `UPDATE student_data SET fname='${req.body.fname}',midname='${req.body.midname || ''}',lname='${req.body.lname}',age=${req.body.age},dob=STR_TO_DATE('${req.body.dob}','%Y-%m-%d'), email='${req.body.email}', address='${req.body.address}',subjects='${req.body.subjects}',image='${req.body.image_url}' where rollNumber=${req.params.id}`
    con.query(sql,(err,result)=>{
       if(err){
          res.send('Please Try Again After some time')
